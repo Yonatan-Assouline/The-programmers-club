@@ -12,27 +12,19 @@ while True:
     c , addr = s.accept()
     print ('got connection from', addr) 
     def on_move(x, y):
-        c.sendall((x, y).encode())
+        cords = (x, y)
+        data = ('1', cords)
+        c.sendall(str(data).encode())
 
     def on_click(x, y, button, pressed):
-        c.sendall('{0} at {1}'.format('Pressed' if pressed else 'Released',(x, y)).encode())
+        cords = (x, y)
+        button_type = '2' if button == mouse.Button.left else '3'
+        data = (button_type, cords)
+        c.sendall(str(data).encode())
     
-    def on_scroll(x, y, dy):
-        c.sendall('Scrolled {0} at {1}'.format('down' if dy < 0 else 'up',(x, y)).encode())
-
-    with mouse.Listener(on_move=on_move,on_click=on_click,on_scroll=on_scroll) as listener:
+   
+    with mouse.Listener(on_move=on_move,on_click=on_click) as listener:
         listener.join()
 
-    listener = mouse.Listener(on_move=on_move,on_click=on_click,on_scroll=on_scroll)
+    listener = mouse.Listener(on_move=on_move,on_click=on_click,)
     listener.start()
-
-    
-    
-#צריך 4 תיוגים, תיוג ראשון על סימון תזוזה, תיוג שני קליק שמאל, תייוג שלישי קליק ימין, תיוג רביעי גלגלת
-    
-    
-    while True:
-            try:
-                print(c.recv(1024).decode())
-            except:
-                break
